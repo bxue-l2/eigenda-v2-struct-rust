@@ -1,0 +1,15 @@
+[package]
+name = "eigenda-v2-struct-rust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+alloy = { version = "0.6", features = ["full"] }
+alloy-rlp = { version = "0.3.11" }
+alloy-primitives = { version = "0.8", features = ["rlp", "serde", "std"] }
+alloy-sol-types = { version = "0.8" }
+num-bigint = "0.4"
+
+[[bin]]
+name = "parser"
+path = "src/bin/parser.rs"
