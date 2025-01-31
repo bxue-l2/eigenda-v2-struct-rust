@@ -1,4 +1,5 @@
 use std::fs;
+use alloy_sol_types::SolCall;
 use eigenda_v2_struct_rust::v2_cert::rs_struct;
 use eigenda_v2_struct_rust::v2_cert::sol_struct;
 use alloy_rlp::{RlpEncodable, RlpDecodable, Decodable, Encodable};
@@ -9,6 +10,9 @@ use alloy::network::{EthereumWallet, TransactionBuilder};
 use alloy_signer::{Signer, SignerSync};
 use alloy::rpc::types::TransactionRequest;
 use alloy::signers::local::PrivateKeySigner;
+use alloy::{primitives::{address, Address}};
+
+const CERT_VERIFIER: Address = address!("0x5c33Ce64EE04400fD593F960d63336F1B65bF77B");
 
 #[tokio::main]
 async fn main() {
@@ -27,15 +31,18 @@ async fn main() {
     let bn = provider.get_block_number().await.unwrap();
     println!("block number is {}", bn);
 
-    let address = "0x5c33Ce64EE04400fD593F960d63336F1B65bF77B";
-
-    let call = sol_struct::verifyDACertV2Call {
+    let input = sol_struct::IEigenDACertVerifier::verifyDACertV2Call {
         batchHeader: batch_header,
         blobInclusionInfo: blob_inclusion,
         nonSignerStakesAndSignature: non_signer,
-    };
+    }.abi_encode();
 
-    //let tx = TransactionRequest::default().
+    let tx = TransactionRequest::default().with_to(CERT_VERIFIER).with_input(input);
+
+    // as long as not error, the call is right
+    let _ = provider.call(&tx).await.expect("not revert");
+
+    println!("verify V2 cert onchain is correct");
     
 }
 
@@ -45,7 +52,7 @@ pub fn parse_batch_header(file_path: &str) -> sol_struct::BatchHeaderV2 {
         .expect("Should have been able to read the file");
 
     let batchHeader = rs_struct::BatchHeaderV2::decode(&mut data.as_slice()).unwrap();
-    let batchHeader_sol = batchHeader.to_sol();
+    let mut batchHeader_sol = batchHeader.to_sol();
 
     println!("batchHeader referenceBlockNumber {:?}", batchHeader_sol.referenceBlockNumber);
     println!("batchHeaderm batchRoot {:?}", batchHeader_sol.batchRoot);
