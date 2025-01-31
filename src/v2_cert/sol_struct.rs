@@ -1,5 +1,4 @@
-use alloy_primitives::{hex, Address, U256, FixedBytes, fixed_bytes};
-use alloy_sol_types::{sol, SolEnum, SolType};
+use alloy_sol_types::sol;
 
 sol! {
     struct BatchHeaderV2 {

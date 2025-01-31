@@ -1,24 +1,28 @@
 use std::fs;
 use alloy_sol_types::SolCall;
-use eigenda_v2_struct_rust::v2_cert::rs_struct;
+use eigenda_v2_struct_rust::v2_cert;
 use eigenda_v2_struct_rust::v2_cert::sol_struct;
-use alloy_rlp::{RlpEncodable, RlpDecodable, Decodable, Encodable};
-use alloy_rpc_client::RpcClient;
 use alloy::providers::{Provider, ProviderBuilder};
-use alloy_transport_http::Http;
 use alloy::network::{EthereumWallet, TransactionBuilder};
-use alloy_signer::{Signer, SignerSync};
 use alloy::rpc::types::TransactionRequest;
 use alloy::signers::local::PrivateKeySigner;
-use alloy::{primitives::{address, Address}};
+use alloy::primitives::{address, Address};
 
 const CERT_VERIFIER: Address = address!("0x5c33Ce64EE04400fD593F960d63336F1B65bF77B");
 
 #[tokio::main]
 async fn main() {
-    let batch_header = parse_batch_header("batch_header.rlp");
-    let non_signer = parse_non_signer("non_signer.rlp");
-    let blob_inclusion = parse_blob_inclusion("blob_inclusion.rlp");
+    let batch_header_rlp = fs::read("batch_header.rlp")
+        .expect("Should have been able to read the file");
+    let non_signer_rlp = fs::read("non_signer.rlp")
+        .expect("Should have been able to read the file");
+    let blob_inclusion_rlp = fs::read("blob_inclusion.rlp")
+        .expect("Should have been able to read the file");
+    
+    let batch_header = v2_cert::parse_batch_header(&batch_header_rlp);
+    let non_signer = v2_cert::parse_non_signer(&non_signer_rlp);
+    let blob_inclusion = v2_cert::parse_blob_inclusion(&blob_inclusion_rlp);
+
 
     let url = "https://ethereum-holesky.publicnode.com".parse().unwrap();
 
@@ -47,38 +51,3 @@ async fn main() {
 }
 
 
-pub fn parse_batch_header(file_path: &str) -> sol_struct::BatchHeaderV2 {
-    let mut data = fs::read(file_path)
-        .expect("Should have been able to read the file");
-
-    let batchHeader = rs_struct::BatchHeaderV2::decode(&mut data.as_slice()).unwrap();
-    let mut batchHeader_sol = batchHeader.to_sol();
-
-    println!("batchHeader referenceBlockNumber {:?}", batchHeader_sol.referenceBlockNumber);
-    println!("batchHeaderm batchRoot {:?}", batchHeader_sol.batchRoot);
-
-    batchHeader_sol
-}
-
-
-pub fn parse_non_signer(file_path: &str) -> sol_struct::NonSignerStakesAndSignature{
-    let data = fs::read(file_path)
-        .expect("Should have been able to read the file");
-
-    let non_signer = rs_struct::NonSignerStakesAndSignature::decode(&mut data.as_slice()).unwrap();
-    let non_signer_sol = non_signer.to_sol();
-
-    println!("non_signer_sol totalStakeIndices {:?}", non_signer_sol.totalStakeIndices);
-    non_signer_sol
-}
-
-pub fn parse_blob_inclusion(file_path: &str) -> sol_struct::BlobInclusionInfo {
-    let data = fs::read(file_path)
-        .expect("Should have been able to read the file");
-
-    let blob_inclusion = rs_struct::BlobInclusionInfo::decode(&mut data.as_slice()).expect("decode to rust blob inclusion struct");
-    let blob_inclusion_sol = blob_inclusion.to_sol();
-
-    println!("non_signer_sol blobIndex {:?}", blob_inclusion_sol.blobIndex);
-    blob_inclusion_sol
-}

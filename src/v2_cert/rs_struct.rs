@@ -1,8 +1,6 @@
-use alloy_sol_types::{sol_data, SolType, SolValue};
 use alloy_primitives::Bytes;
-use alloy_rlp::{RlpEncodable, RlpDecodable, Decodable, Encodable};
-use alloy_primitives::{hex, Address, U256, FixedBytes, fixed_bytes};
-
+use alloy_rlp::{RlpEncodable, RlpDecodable, Decodable};
+use alloy_primitives::{U256, FixedBytes};
 use super::sol_struct;
 
 // G1Point represents a point on the BN254 G1 curve
@@ -168,4 +166,18 @@ impl NonSignerStakesAndSignature {
             nonSignerStakeIndices: self.non_signer_stake_indices.clone(),
         }
     }
+}
+
+
+pub fn parse_batch_header(data: &Vec<u8>) -> sol_struct::BatchHeaderV2 {
+    BatchHeaderV2::decode(&mut data.as_slice()).unwrap().to_sol()
+}
+
+
+pub fn parse_non_signer(data: &Vec<u8>) -> sol_struct::NonSignerStakesAndSignature {
+    NonSignerStakesAndSignature::decode(&mut data.as_slice()).unwrap().to_sol()
+}
+
+pub fn parse_blob_inclusion(data: &Vec<u8>) -> sol_struct::BlobInclusionInfo {
+    BlobInclusionInfo::decode(&mut data.as_slice()).expect("decode to rust blob inclusion struct").to_sol()
 }
