@@ -27,7 +27,7 @@ async fn main() {
     //blob_inclusion.blobIndex = 3;
 
 
-    let url = "https://eth-holesky.g.alchemy.com/v2/P4tiNCHIHYa0HnACGNUflmqeVZ6At4Ln".parse().unwrap();
+    let url = "https://ethereum-holesky.publicnode.com".parse().unwrap();
 
     // just a random private key
     let signer = "966d6501da9ff16d1b460ea17e474b0efa27b0baf505af1162878b14e33afdf7"
