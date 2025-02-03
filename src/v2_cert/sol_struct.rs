@@ -62,6 +62,12 @@ sol! {
             BlobInclusionInfo calldata blobInclusionInfo,
             NonSignerStakesAndSignature calldata nonSignerStakesAndSignature
         ) external view;
+        #[sol(rpc)]
+        function verifyDACertV2ForZKProof(
+            BatchHeaderV2 calldata batchHeader,
+            BlobInclusionInfo calldata blobInclusionInfo,
+            NonSignerStakesAndSignature calldata nonSignerStakesAndSignature
+        ) external view returns (bool);
     }
     
 }
