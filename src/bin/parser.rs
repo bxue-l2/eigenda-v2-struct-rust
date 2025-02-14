@@ -1,5 +1,4 @@
-use std::{fs, result};
-use alloy::eips::calc_blob_gasprice;
+use std::fs;
 use alloy_sol_types::SolCall;
 use eigenda_v2_struct_rust::v2_cert;
 use eigenda_v2_struct_rust::v2_cert::sol_struct;
@@ -9,7 +8,7 @@ use alloy::rpc::types::TransactionRequest;
 use alloy::signers::local::PrivateKeySigner;
 use alloy::primitives::{address, Address};
 
-const CERT_VERIFIER: Address = address!("0xA6be9E1425CD1A49c1b5288903C54E807604d8DC");
+const CERT_VERIFIER: Address = address!("0x46D91A257B70E4784a9c5538E1456a84ba6A41Ee");
 
 
 #[tokio::main]

@@ -168,7 +168,6 @@ impl NonSignerStakesAndSignature {
     }
 }
 
-
 pub fn parse_batch_header(data: &Vec<u8>) -> sol_struct::BatchHeaderV2 {
     BatchHeaderV2::decode(&mut data.as_slice()).unwrap().to_sol()
 }
@@ -180,4 +179,12 @@ pub fn parse_non_signer(data: &Vec<u8>) -> sol_struct::NonSignerStakesAndSignatu
 
 pub fn parse_blob_inclusion(data: &Vec<u8>) -> sol_struct::BlobInclusionInfo {
     BlobInclusionInfo::decode(&mut data.as_slice()).expect("decode to rust blob inclusion struct").to_sol()
+}
+
+/// EigenDAV2Cert to be updatd in the solidity
+#[derive(Debug, Clone, RlpEncodable, RlpDecodable)]
+pub struct EigenDAV2Cert {
+    pub batch_header_v2: BatchHeaderV2,
+    pub nonsigner_stake_and_signature: NonSignerStakesAndSignature,
+    pub blob_inclusion_info: BlobInclusionInfo,
 }
