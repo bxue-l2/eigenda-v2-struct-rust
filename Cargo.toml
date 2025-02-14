@@ -4,7 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-alloy = { version = "0.6", features = ["full"] }
 alloy-rlp = { version = "0.3.10" }
 alloy-primitives = { version = "0.8.14", features = ["rlp", "serde", "std"] }
 alloy-sol-types = { version = "0.8.14" }
@@ -12,13 +11,9 @@ num-bigint = "0.4"
 tokio = { version = "1.42", features = ["rt-multi-thread", "macros"] }
 
 [dev-dependencies]
+alloy = { version = "0.6", features = ["full"] }
 alloy-provider = { version = "0.9.2", default-features = false }
 alloy-transport = { version = "0.9.2", default-features = false }
 alloy-rpc-client = { version = "0.9.2", default-features = false }
 alloy-transport-http = { version = "0.9.2", default-features = false }
 alloy-signer = { version = "0.9.2" }
-
-
-[[bin]]
-name = "parser"
-path = "src/bin/parser.rs"
