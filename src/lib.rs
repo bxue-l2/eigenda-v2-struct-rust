@@ -1,8 +1,8 @@
 pub mod sol_struct;
 
 use alloy_primitives::Bytes;
-use alloy_rlp::{RlpEncodable, RlpDecodable, Decodable};
-use alloy_primitives::{U256, FixedBytes};
+use alloy_primitives::{FixedBytes, U256};
+use alloy_rlp::{Decodable, RlpDecodable, RlpEncodable};
 
 // G1Point represents a point on the BN254 G1 curve
 #[derive(Debug, Clone, Copy, RlpEncodable, RlpDecodable)]
@@ -13,12 +13,12 @@ pub struct G1Point {
 }
 
 impl G1Point {
-    pub fn to_sol(&self) ->  sol_struct::G1Point {
+    pub fn to_sol(&self) -> sol_struct::G1Point {
         sol_struct::G1Point {
             X: self.x,
             Y: self.y,
         }
-    }  
+    }
 }
 
 // G2Point represents a point on the BN254 G2 curve
@@ -29,7 +29,7 @@ pub struct G2Point {
 }
 
 impl G2Point {
-    pub fn to_sol(&self) ->  sol_struct::G2Point {
+    pub fn to_sol(&self) -> sol_struct::G2Point {
         let mut x = [U256::default(); 2];
         x[0] = self.x[0];
         x[1] = self.x[1];
@@ -38,11 +38,8 @@ impl G2Point {
         y[0] = self.y[0];
         y[1] = self.y[1];
 
-        sol_struct::G2Point {
-            X: x,
-            Y: y,
-        }
-    }  
+        sol_struct::G2Point { X: x, Y: y }
+    }
 }
 
 // BlobCommitment contains commitment information for a blob
@@ -55,7 +52,7 @@ pub struct BlobCommitment {
 }
 
 impl BlobCommitment {
-    pub fn to_sol(&self) ->  sol_struct::BlobCommitment {
+    pub fn to_sol(&self) -> sol_struct::BlobCommitment {
         sol_struct::BlobCommitment {
             commitment: self.commitment.to_sol(),
             lengthCommitment: self.length_commitment.to_sol(),
@@ -76,7 +73,7 @@ pub struct BlobHeaderV2 {
 }
 
 impl BlobHeaderV2 {
-    pub fn to_sol(&self) ->  sol_struct::BlobHeaderV2 {
+    pub fn to_sol(&self) -> sol_struct::BlobHeaderV2 {
         sol_struct::BlobHeaderV2 {
             version: self.version,
             quorumNumbers: Bytes::copy_from_slice(&self.quorum_numbers),
@@ -96,7 +93,7 @@ pub struct BlobCertificate {
 }
 
 impl BlobCertificate {
-    pub fn to_sol(&self) ->  sol_struct::BlobCertificate {
+    pub fn to_sol(&self) -> sol_struct::BlobCertificate {
         sol_struct::BlobCertificate {
             signature: self.signature.clone(),
             relayKeys: self.relay_keys.clone(),
@@ -132,18 +129,17 @@ pub struct NonSignerStakesAndSignature {
     pub non_signer_stake_indices: Vec<Vec<u32>>,
 }
 
-
 impl BatchHeaderV2 {
-    pub fn to_sol(&self) ->  sol_struct::BatchHeaderV2 {
+    pub fn to_sol(&self) -> sol_struct::BatchHeaderV2 {
         sol_struct::BatchHeaderV2 {
             batchRoot: FixedBytes::<32>(self.batch_root),
             referenceBlockNumber: self.reference_block_number,
         }
-    }  
+    }
 }
 
 impl BlobInclusionInfo {
-    pub fn to_sol(&self) ->  sol_struct::BlobInclusionInfo {
+    pub fn to_sol(&self) -> sol_struct::BlobInclusionInfo {
         sol_struct::BlobInclusionInfo {
             blobIndex: self.blob_index,
             inclusionProof: self.inclusion_proof.clone(),
@@ -153,11 +149,15 @@ impl BlobInclusionInfo {
 }
 
 impl NonSignerStakesAndSignature {
-    pub fn to_sol(&self) ->  sol_struct::NonSignerStakesAndSignature {
+    pub fn to_sol(&self) -> sol_struct::NonSignerStakesAndSignature {
         sol_struct::NonSignerStakesAndSignature {
-            nonSignerQuorumBitmapIndices: self.non_signer_quorum_bitmap_indices.clone(),  
+            nonSignerQuorumBitmapIndices: self.non_signer_quorum_bitmap_indices.clone(),
             nonSignerPubkeys: self.non_signer_pubkeys.iter().map(|e| e.to_sol()).collect(),
-            quorumApks: self.quorum_apks.iter().map(|e| sol_struct::G1Point{X: e.x, Y: e.y}).collect(),
+            quorumApks: self
+                .quorum_apks
+                .iter()
+                .map(|e| sol_struct::G1Point { X: e.x, Y: e.y })
+                .collect(),
             apkG2: self.apk_g2.to_sol(),
             sigma: self.sigma.to_sol(),
             quorumApkIndices: self.quorum_apk_indices.clone(),
@@ -168,16 +168,21 @@ impl NonSignerStakesAndSignature {
 }
 
 pub fn parse_batch_header(data: &Vec<u8>) -> sol_struct::BatchHeaderV2 {
-    BatchHeaderV2::decode(&mut data.as_slice()).unwrap().to_sol()
+    BatchHeaderV2::decode(&mut data.as_slice())
+        .unwrap()
+        .to_sol()
 }
 
-
 pub fn parse_non_signer(data: &Vec<u8>) -> sol_struct::NonSignerStakesAndSignature {
-    NonSignerStakesAndSignature::decode(&mut data.as_slice()).unwrap().to_sol()
+    NonSignerStakesAndSignature::decode(&mut data.as_slice())
+        .unwrap()
+        .to_sol()
 }
 
 pub fn parse_blob_inclusion(data: &Vec<u8>) -> sol_struct::BlobInclusionInfo {
-    BlobInclusionInfo::decode(&mut data.as_slice()).expect("decode to rust blob inclusion struct").to_sol()
+    BlobInclusionInfo::decode(&mut data.as_slice())
+        .expect("decode to rust blob inclusion struct")
+        .to_sol()
 }
 
 /// EigenDAV2Cert to be updatd in the solidity

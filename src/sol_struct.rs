@@ -11,13 +11,13 @@ sol! {
         uint32 blobIndex;
         bytes inclusionProof;
     }
-    
+
     struct BlobCertificate {
         BlobHeaderV2 blobHeader;
         bytes signature;
         uint32[] relayKeys;
     }
-    
+
     struct BlobHeaderV2 {
         uint16 version;
         bytes quorumNumbers;
@@ -45,17 +45,17 @@ sol! {
     }
 
     struct NonSignerStakesAndSignature {
-        uint32[] nonSignerQuorumBitmapIndices; 
-        G1Point[] nonSignerPubkeys; 
-        G1Point[] quorumApks; 
-        G2Point apkG2; 
-        G1Point sigma; 
-        uint32[] quorumApkIndices; 
-        uint32[] totalStakeIndices; 
-        uint32[][] nonSignerStakeIndices; 
+        uint32[] nonSignerQuorumBitmapIndices;
+        G1Point[] nonSignerPubkeys;
+        G1Point[] quorumApks;
+        G2Point apkG2;
+        G1Point sigma;
+        uint32[] quorumApkIndices;
+        uint32[] totalStakeIndices;
+        uint32[][] nonSignerStakeIndices;
     }
 
-    interface IEigenDACertVerifier { 
+    interface IEigenDACertVerifier {
         #[sol(rpc)]
         function verifyDACertV2(
             BatchHeaderV2 calldata batchHeader,
@@ -69,5 +69,5 @@ sol! {
             NonSignerStakesAndSignature calldata nonSignerStakesAndSignature
         ) external view returns (bool);
     }
-    
+
 }
