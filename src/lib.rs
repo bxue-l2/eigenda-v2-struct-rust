@@ -1,8 +1,8 @@
 pub mod sol_struct;
 
 use alloy_primitives::Bytes;
-use alloy_primitives::{FixedBytes, U256};
-use alloy_rlp::{Decodable, RlpDecodable, RlpEncodable};
+use alloy_primitives::{FixedBytes, U256, keccak256, B256};
+use alloy_rlp::{Decodable, Encodable, RlpDecodable, RlpEncodable};
 
 // G1Point represents a point on the BN254 G1 curve
 #[derive(Debug, Clone, Copy, RlpEncodable, RlpDecodable, PartialEq)]
@@ -191,4 +191,13 @@ pub struct EigenDAV2Cert {
     pub batch_header_v2: BatchHeaderV2,
     pub nonsigner_stake_and_signature: NonSignerStakesAndSignature,
     pub blob_inclusion_info: BlobInclusionInfo,
+}
+
+impl EigenDAV2Cert {
+    pub fn digest(&self) -> B256 {
+        let mut cert_rlp_bytes = Vec::<u8>::new();
+        // rlp encode of cert
+        self.encode(&mut cert_rlp_bytes);
+        keccak256(&cert_rlp_bytes)
+    }
 }
