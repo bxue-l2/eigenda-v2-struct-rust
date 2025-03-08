@@ -68,8 +68,7 @@ pub struct BlobHeaderV2 {
     pub version: u16,
     pub quorum_numbers: Bytes,
     pub commitment: BlobCommitment,
-    pub payment_header_hash: [u8; 32],
-    pub salt: u32,
+    pub payment_header_hash: [u8; 32],    
 }
 
 impl BlobHeaderV2 {
@@ -77,8 +76,7 @@ impl BlobHeaderV2 {
         sol_struct::BlobHeaderV2 {
             version: self.version,
             quorumNumbers: Bytes::copy_from_slice(&self.quorum_numbers),
-            paymentHeaderHash: FixedBytes::<32>(self.payment_header_hash),
-            salt: self.salt,
+            paymentHeaderHash: FixedBytes::<32>(self.payment_header_hash),            
             commitment: self.commitment.to_sol(),
         }
     }
@@ -188,9 +186,10 @@ pub fn parse_blob_inclusion(data: &Vec<u8>) -> sol_struct::BlobInclusionInfo {
 /// EigenDAV2Cert to be updatd in the solidity
 #[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq)]
 pub struct EigenDAV2Cert {
-    pub batch_header_v2: BatchHeaderV2,
-    pub nonsigner_stake_and_signature: NonSignerStakesAndSignature,
     pub blob_inclusion_info: BlobInclusionInfo,
+    pub batch_header_v2: BatchHeaderV2,
+    pub nonsigner_stake_and_signature: NonSignerStakesAndSignature,    
+    pub signed_quorum_numbers: Bytes,
 }
 
 impl EigenDAV2Cert {

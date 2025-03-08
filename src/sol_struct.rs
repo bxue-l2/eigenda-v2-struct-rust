@@ -22,8 +22,7 @@ sol! {
         uint16 version;
         bytes quorumNumbers;
         BlobCommitment commitment;
-        bytes32 paymentHeaderHash;
-        uint32 salt;
+        bytes32 paymentHeaderHash;        
     }
 
     struct G1Point {
