@@ -1319,6 +1319,7 @@ dependencies = [
  "alloy-transport",
  "alloy-transport-http",
  "num-bigint",
+ "serde",
  "tokio",
 ]
 

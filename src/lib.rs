@@ -3,9 +3,10 @@ pub mod sol_struct;
 use alloy_primitives::Bytes;
 use alloy_primitives::{FixedBytes, U256, keccak256, B256};
 use alloy_rlp::{Decodable, Encodable, RlpDecodable, RlpEncodable};
+use serde::{Serialize, Deserialize};
 
 // G1Point represents a point on the BN254 G1 curve
-#[derive(Debug, Clone, Copy, RlpEncodable, RlpDecodable, PartialEq)]
+#[derive(Debug, Clone, Copy, RlpEncodable, RlpDecodable, PartialEq, Serialize, Deserialize)]
 pub struct G1Point {
     //pub x: [u8; 32],
     pub x: U256,
@@ -22,7 +23,7 @@ impl G1Point {
 }
 
 // G2Point represents a point on the BN254 G2 curve
-#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq)]
+#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq, Serialize, Deserialize)]
 pub struct G2Point {
     pub x: Vec<U256>,
     pub y: Vec<U256>,
@@ -43,7 +44,7 @@ impl G2Point {
 }
 
 // BlobCommitment contains commitment information for a blob
-#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq)]
+#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq, Serialize, Deserialize)]
 pub struct BlobCommitment {
     pub commitment: G1Point,
     pub length_commitment: G2Point,
@@ -63,7 +64,7 @@ impl BlobCommitment {
 }
 
 // BlobHeaderV2 is the version 2 of blob header
-#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq)]
+#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq, Serialize, Deserialize)]
 pub struct BlobHeaderV2 {
     pub version: u16,
     pub quorum_numbers: Bytes,
@@ -83,7 +84,7 @@ impl BlobHeaderV2 {
 }
 
 // BlobCertificate contains certification information for a blob
-#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq)]
+#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq, Serialize, Deserialize)]
 pub struct BlobCertificate {
     pub blob_header: BlobHeaderV2,
     pub signature: Bytes,
@@ -101,7 +102,7 @@ impl BlobCertificate {
 }
 
 // BlobInclusionInfo contains inclusion proof information for a blob
-#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq)]
+#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq, Serialize, Deserialize)]
 pub struct BlobInclusionInfo {
     pub blob_certificate: BlobCertificate,
     pub blob_index: u32,
@@ -109,13 +110,13 @@ pub struct BlobInclusionInfo {
 }
 
 // BatchHeaderV2 is the version 2 of batch header
-#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq)]
+#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq, Serialize, Deserialize)]
 pub struct BatchHeaderV2 {
     pub batch_root: [u8; 32],
     pub reference_block_number: u32,
 }
 // NonSignerStakesAndSignature contains information about non-signers and their stakes
-#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq)]
+#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq, Serialize, Deserialize)]
 pub struct NonSignerStakesAndSignature {
     pub non_signer_quorum_bitmap_indices: Vec<u32>,
     pub non_signer_pubkeys: Vec<G1Point>,
@@ -184,7 +185,7 @@ pub fn parse_blob_inclusion(data: &Vec<u8>) -> sol_struct::BlobInclusionInfo {
 }
 
 /// EigenDAV2Cert to be updatd in the solidity
-#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq)]
+#[derive(Debug, Clone, RlpEncodable, RlpDecodable, PartialEq, Serialize, Deserialize)]
 pub struct EigenDAV2Cert {
     pub blob_inclusion_info: BlobInclusionInfo,
     pub batch_header_v2: BatchHeaderV2,

@@ -7,6 +7,7 @@ edition = "2021"
 alloy-rlp = { version = "0.3.11", features = ["derive"] }
 alloy-primitives = { version = "0.8.21", default-features = false, features = ["rlp", "serde", "std"] }
 alloy-sol-types = { version = "0.8.20", default-features = false }
+serde = { version = "1.0.198", features = ["derive"] }
 
 [dev-dependencies]
 num-bigint = "0.4"
